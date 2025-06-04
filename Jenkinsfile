@@ -9,7 +9,7 @@ pipeline {
             RELEASE = "1.0.0"
             DOCKER_USER = "umakantnikam"
             DOCKER_PASS = 'dockerhub-credentials'
-            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+            IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
             IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }	
     stages{
@@ -60,11 +60,11 @@ pipeline {
          stage("Build & Push Docker Image") {
              steps {
                  script {
-                     docker.withRegistry('',DOCKER_PASS) {
+                     docker.withRegistry('',DOCKER_CREDENTIAL_ID) {
                          docker_image = docker.build "${IMAGE_NAME}"
                      }
 
-                     docker.withRegistry('',DOCKER_PASS) {
+                     docker.withRegistry('',DOCKER_CREDENTIAL_ID) {
                          docker_image.push("${IMAGE_TAG}")
                          docker_image.push('latest')
                      }
